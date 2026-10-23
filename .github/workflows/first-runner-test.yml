@@ -1,0 +1,21 @@
+name: First runner test
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-runner:
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Which runner am I on?
+        run: hostname
+
+      - name: Tools from the golden image
+        run: |
+          docker --version
+          az version --output table
+          node -v
+
+      - name: Who runs the job
+        run: whoami
