@@ -91,6 +91,9 @@ jobs:
     name: Deploy
     needs: [quality, build-image]
     runs-on: [self-hosted, Linux, X64, gcp]
+    env:
+       TEAMS_WEBHOOK: ${{ secrets.TEAMS_WEBHOOK }}
+
     steps:
       - uses: azure/login@v2
         with:
@@ -124,7 +127,7 @@ jobs:
           echo "Health check failed after 5 attempts"
           exit 1
       - name: Notify Teams on success
-        if: ${{ success() && secrets.TEAMS_WEBHOOK != '' }}
+        if: ${{ success() && env.TEAMS_WEBHOOK != '' }}
         run: |
           SHORT_SHA=$(echo "${{ github.sha }}" | cut -c1-7)
           curl -H "Content-Type: application/json" -d '{
@@ -150,7 +153,7 @@ jobs:
             }]
           }' "${{ secrets.TEAMS_WEBHOOK }}"
       - name: Notify Teams on failure
-        if: ${{ failure() && secrets.TEAMS_WEBHOOK != '' }}
+        if: ${{ failure() && env.TEAMS_WEBHOOK != '' }}
         run: |
           curl -H "Content-Type: application/json" -d '{
             "type": "message",
