@@ -1,0 +1,21 @@
+name: Scale test (5 jobs)
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/scale-test.yml"
+  workflow_dispatch:
+
+jobs:
+  busy-job:
+    strategy:
+      matrix:
+        n: [1, 2, 3, 4, 5]
+    runs-on: [self-hosted, Linux, X64, gcp]
+    timeout-minutes: 15
+    steps:
+      - name: Which runner am I on?
+        run: echo "Job ${{ matrix.n }} on $(hostname) at $(date -u +%H:%M:%S) UTC"
+
+      - name: Stay busy for 5 minutes
+        run: sleep 300
