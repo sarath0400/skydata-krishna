@@ -8,7 +8,7 @@
 set -euxo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
-RUNNER_VERSION="2.319.1"
+RUNNER_VERSION="2.338.0"
 
 # --- base packages ---
 apt-get update
