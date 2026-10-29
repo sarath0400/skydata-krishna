@@ -19,3 +19,12 @@ jobs:
 
       - name: Who runs the job
         run: whoami
+
+      - name: Files BEFORE checkout
+        run: ls
+
+      - name: Get the repo code
+        uses: actions/checkout@v4
+
+      - name: Files AFTER checkout
+        run: ls
