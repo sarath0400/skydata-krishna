@@ -1,0 +1,23 @@
+name: Trigger test
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - "src/**"
+  workflow_dispatch:
+    inputs:
+      who:
+        description: "Who started this run?"
+        required: true
+        default: "Sarath"
+
+jobs:
+  show-event:
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: What started me?
+        run: |
+          echo "Event:  ${{ github.event_name }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Who:    ${{ inputs.who }}"
