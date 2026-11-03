@@ -32,3 +32,22 @@ jobs:
     steps:
       - name: Deploy
         run: echo "Deploying on $(hostname)"
+
+  alert:
+    needs: [build, test, deploy]
+    if: failure()
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Alert
+        run: echo "Something FAILED - sending alert"
+
+  summary:
+    needs: [build, test, deploy]
+    if: always()
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Summary
+        run: |
+          echo "build:  ${{ needs.build.result }}"
+          echo "test:   ${{ needs.test.result }}"
+          echo "deploy: ${{ needs.deploy.result }}"
