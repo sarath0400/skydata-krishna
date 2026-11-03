@@ -1,0 +1,34 @@
+name: Needs test
+on:
+  workflow_dispatch:
+    inputs:
+      break_build:
+        description: "Make the build job fail?"
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Build
+        run: |
+          echo "Building on $(hostname)"
+          if [ "${{ inputs.break_build }}" = "true" ]; then
+            echo "Build broken on purpose"
+            exit 1
+          fi
+
+  test:
+    needs: build
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Test
+        run: echo "Testing on $(hostname)"
+
+  deploy:
+    needs: test
+    runs-on: [self-hosted, Linux, X64, gcp]
+    steps:
+      - name: Deploy
+        run: echo "Deploying on $(hostname)"
