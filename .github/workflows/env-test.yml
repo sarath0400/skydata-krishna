@@ -23,10 +23,12 @@ jobs:
           echo "LEVEL:    $LEVEL"
 
       - name: 2. env in the next step
-        run: echo "LEVEL:    $LEVEL"
+        run: |
+          echo "LEVEL:    $LEVEL"
 
       - name: 3. Variable from Settings (vars)
-        run: echo "APP_COLOR: ${{ vars.APP_COLOR }}"
+        run: |
+          echo "APP_COLOR: ${{ vars.APP_COLOR }}"
 
       - name: 4. Secret from Settings (secrets)
         env:
