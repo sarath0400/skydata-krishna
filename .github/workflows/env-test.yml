@@ -1,0 +1,43 @@
+name: Env test
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  LEVEL: "workflow"
+  APP_NAME: "skydata-krishna"
+
+jobs:
+  show-values:
+    runs-on: [self-hosted, Linux, X64, gcp]
+    env:
+      LEVEL: "job"
+    steps:
+      - name: 1. env at three levels
+        env:
+          LEVEL: "step"
+        run: |
+          echo "APP_NAME: $APP_NAME"
+          echo "LEVEL:    $LEVEL"
+
+      - name: 2. env in the next step
+        run: echo "LEVEL:    $LEVEL"
+
+      - name: 3. Variable from Settings (vars)
+        run: echo "APP_COLOR: ${{ vars.APP_COLOR }}"
+
+      - name: 4. Secret from Settings (secrets)
+        env:
+          MY_PASSWORD: ${{ secrets.MY_PASSWORD }}
+        run: |
+          echo "Password: $MY_PASSWORD"
+          echo "Length:   ${#MY_PASSWORD}"
+
+      - name: 5. GITHUB_TOKEN (given automatically)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/repos/${{ github.repository }} | jq -r '.full_name'
